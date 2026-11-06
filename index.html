@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABC - Customer Reviews</title>
+<style>
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f6fa;
+  color:#222;
+}
+header {
+  background:#111827;
+  color:white;
+  padding:22px 8%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.logo {font-size:27px;font-weight:bold;color:#60a5fa;}
+header a {color:white;text-decoration:none;}
+.hero {
+  text-align:center;
+  padding:65px 15px;
+  background:linear-gradient(135deg,#172554,#2563eb);
+  color:white;
+}
+.hero h1 {font-size:42px;margin:0 0 12px;}
+.hero p {font-size:17px;}
+.container {
+  max-width:850px;
+  margin:30px auto;
+  padding:15px;
+}
+.card {
+  background:white;
+  padding:25px;
+  border-radius:14px;
+  margin-bottom:20px;
+  box-shadow:0 3px 15px #00000010;
+}
+.rating {font-size:35px;color:#f59e0b;}
+.stars {color:#f59e0b;font-size:23px;}
+.review {
+  border-bottom:1px solid #eee;
+  padding:17px 0;
+}
+.review:last-child {border:0;}
+input,textarea {
+  width:100%;
+  padding:13px;
+  margin:9px 0;
+  border:1px solid #ddd;
+  border-radius:8px;
+  font-size:15px;
+}
+button {
+  background:#2563eb;
+  color:white;
+  border:0;
+  padding:13px 22px;
+  border-radius:8px;
+  cursor:pointer;
+}
+footer {
+  text-align:center;
+  background:#111827;
+  color:white;
+  padding:25px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">ABC.</div>
+  <a href="#reviews">Reviews</a>
+</header>
+
+<section class="hero">
+  <h1>Welcome to ABC</h1>
+  <p>Your trusted local business</p>
+  <p>Quality Service. Customer Satisfaction.</p>
+</section>
+
+<div class="container">
+
+<div class="card" style="text-align:center">
+  <h2>Customer Rating</h2>
+  <div class="rating" id="average">4.8 ★</div>
+  <p id="total">Based on 3 reviews</p>
+</div>
+
+<div class="card" id="reviews">
+  <h2>Customer Reviews</h2>
+  <div id="reviewList">
+    <div class="review">
+      <b>Rahul S.</b>
+      <div class="stars">★★★★★</div>
+      <p>Excellent service and friendly staff!</p>
+    </div>
+    <div class="review">
+      <b>Priya M.</b>
+      <div class="stars">★★★★★</div>
+      <p>Very good experience. Highly recommended.</p>
+    </div>
+    <div class="review">
+      <b>Amit K.</b>
+      <div class="stars">★★★★☆</div>
+      <p>Good quality and fast service.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Write a Review</h2>
+  <input id="name" placeholder="Your Name">
+  <label>Select Rating:</label>
+  <select id="stars">
+    <option value="5">★★★★★ - Excellent</option>
+    <option value="4">★★★★ - Very Good</option>
+    <option value="3">★★★ - Good</option>
+    <option value="2">★★ - Average</option>
+    <option value="1">★ - Poor</option>
+  </select>
+  <textarea id="comment" placeholder="Write your experience..."></textarea>
+  <button onclick="addReview()">Submit Review</button>
+</div>
+
+</div>
+
+<footer>
+  <h3>ABC Business</h3>
+  <p>© 2026 ABC. All Rights Reserved.</p>
+</footer>
+
+<script>
+let reviews = [
+ {name:"Rahul S.",rating:5,text:"Excellent service and friendly staff!"},
+ {name:"Priya M.",rating:5,text:"Very good experience. Highly recommended."},
+ {name:"Amit K.",rating:4,text:"Good quality and fast service."}
+];
+
+function render() {
+ const list = document.getElementById("reviewList");
+ list.innerHTML = "";
+ reviews.forEach(r => {
+   list.innerHTML += `
+   <div class="review">
+    <b>${escapeHTML(r.name)}</b>
+    <div class="stars">${"★".repeat(r.rating)}${"☆".repeat(5-r.rating)}</div>
+    <p>${escapeHTML(r.text)}</p>
+   </div>`;
+ });
+ let avg = reviews.reduce((s,r)=>s+r.rating,0)/reviews.length;
+ document.getElementById("average").textContent =
+   avg.toFixed(1)+" ★";
+ document.getElementById("total").textContent =
+   "Based on "+reviews.length+" reviews";
+}
+
+function escapeHTML(str) {
+ return str.replace(/[&<>"']/g, c => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+function addReview() {
+ let name = document.getElementById("name").value.trim();
+ let text = document.getElementById("comment").value.trim();
+ let rating = Number(document.getElementById("stars").value);
+ if(!name || !text) {
+   alert("Please enter your name and review.");
+   return;
+ }
+ reviews.unshift({name,rating,text});
+ render();
+ document.getElementById("name").value="";
+ document.getElementById("comment").value="";
+}
+render();
+</script>
+
+</body>
+</html>
